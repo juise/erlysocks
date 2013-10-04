@@ -1,0 +1,12 @@
+{application, erlysocks,
+ [
+  {description, "Erlang Socks 5 server"},
+  {vsn, "1.0.0"},
+  {registered, [erlysocks_sup, erlysocks_srv]},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { erlysocks_app, []}},
+  {env, []}
+ ]}.

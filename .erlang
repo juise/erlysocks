@@ -1,0 +1,4 @@
+code:add_patha("./ebin/").
+code:add_patha("./deps/lager/ebin/").
+code:add_patha("./deps/goldrush/ebin/").
+
