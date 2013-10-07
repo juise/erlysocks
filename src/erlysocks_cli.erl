@@ -100,7 +100,7 @@ handle_cast(_Msg, State) ->
 %% @end
 %%--------------------------------------------------------------------
 
-handle_info({tcp, Socket, <<16#05:8, 16#01:8, _Methods:8>> = _Message}, #state{src_sock=Socket} = State) ->
+handle_info({tcp, Socket, <<16#05:8, NMethods:8, _Methods:NMethods/binary>> = _Message}, #state{src_sock=Socket} = State) ->
     ok = gen_tcp:send(Socket, <<16#05, 16#00>>),
     {noreply, State};
 
@@ -267,7 +267,7 @@ log(<<"OPTIONS", _Rest/binary>> = Message, Socket) -> log_ll(Message, Socket);
 log(_, _) -> ok.
 
 log_ll(Message, Socket) ->
-    [Method, Url, _, _, _, Address | _Rest] = re:split(Message, "[ \r\n]", [trim]),
+    {match, [[_, Method, Url], [_, _, _, Address]]} = re:run(Message,"^(.*) (.*) HTTP|Host: (.*)\r",[global,{capture,all,list}]),
     {SrcAddress, SrcPort} = self(Socket),
     lager:info("~s:~w ~s http://~s~s", [printable(SrcAddress), SrcPort, Method, Address, Url]).
 
